@@ -6,7 +6,7 @@ on:
       - main
 
 env:
-  DOCKER_IMAGE: chuhlomin/render-template
+  DOCKER_IMAGE: pavlospt/render-template
 
 jobs:
   main:
@@ -18,7 +18,7 @@ jobs:
       - name: Build and push Docker image
         uses: chuhlomin/actions/docker-build-push@main
         with:
-          username: chuhlomin
+          username: pavlospt
           password: ${{ secrets.DOCKER_PASSWORD }}
           image_name: ${{ env.DOCKER_IMAGE }}
           tags: |
