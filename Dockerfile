@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM golang:1.17 as build-env
+FROM --platform=linux/arm64 public.ecr.aws/docker/library/golang:1.17 as build-env
 
 WORKDIR /go/src/app
 ADD . /go/src/app
@@ -6,7 +6,7 @@ ADD . /go/src/app
 RUN go test -mod=vendor -cover ./...
 RUN go build -mod=vendor -o /go/bin/app
 
-FROM --platform=$BUILDPLATFORM gcr.io/distroless/static
+FROM --platform=linux/arm64 gcr.io/distroless/static
 # latest-amd64 -> 966f4bd97f611354c4ad829f1ed298df9386c2ec
 # https://github.com/GoogleContainerTools/distroless/tree/master/base
 
