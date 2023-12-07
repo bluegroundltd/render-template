@@ -34,4 +34,4 @@ outputs:
 
 runs:
   using: docker
-  image: 'docker://pavlospt/render-template:v1.9'
+  image: 'Dockerfile'
