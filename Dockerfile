@@ -7,14 +7,12 @@ RUN go test -mod=vendor -cover ./...
 RUN go build -mod=vendor -o /go/bin/app
 
 FROM --platform=linux/arm64 gcr.io/distroless/static
-# latest-amd64 -> 966f4bd97f611354c4ad829f1ed298df9386c2ec
-# https://github.com/GoogleContainerTools/distroless/tree/master/base
 
 LABEL name="render-template"
-LABEL repository="http://github.com/chuhlomin/render-template"
-LABEL homepage="http://github.com/chuhlomin/render-template"
+LABEL repository="http://github.com/bluegroundltd/render-template"
+LABEL homepage="http://github.com/bluegroundltd/render-template"
 
-LABEL maintainer="Konstantin Chukhlomin <mail@chuhlomin.com>"
+LABEL maintainer="BluegroundLTD <engineering@bluegroundltd.com>"
 LABEL com.github.actions.name="Render template"
 LABEL com.github.actions.description="Renders file based on template and passed variables"
 LABEL com.github.actions.icon="file-text"

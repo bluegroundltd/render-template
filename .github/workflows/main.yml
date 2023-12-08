@@ -6,25 +6,38 @@ on:
       - main
 
 env:
-  DOCKER_IMAGE: pavlospt/render-template
+  DOCKER_IMAGE_REPO: bluegroundltd/render-template
+  PUBLIC_ECR_REGISTRY: public.ecr.aws/l2j5o5b6
 
 jobs:
   main:
-    runs-on: ubuntu-latest
+    runs-on: arc-runner-set
+    permissions:
+      id-token: write
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Build and push Docker image
-        uses: chuhlomin/actions/docker-build-push@main
+        uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
-          username: pavlospt
-          password: ${{ secrets.DOCKER_PASSWORD }}
-          image_name: ${{ env.DOCKER_IMAGE }}
-          tags: |
-            ${{ env.DOCKER_IMAGE }}:${{ github.sha }}
-            ${{ env.DOCKER_IMAGE }}:latest
-
+            role-to-assume: arn:aws:iam::489098123993:role/github-actions-assumable-role
+            aws-region: us-east-1
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: public
+      - uses: benjlevesque/short-sha@v2.2
+        id: short-sha
+        with:
+          length: 7
+      - name: Build & push to public ECR
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: ${{ env.PUBLIC_ECR_REGISTRY}}/${{ env.DOCKER_IMAGE_REPO }}:${{ steps.short-sha.outputs.sha }}
       - name: Test action
         uses: ./ # Uses an action in the root directory
         id: render
@@ -32,6 +45,5 @@ jobs:
           template: ./testdata/template.txt
           vars: |
             name: world
-
       - name: Get `result` output
         run: echo "${{ steps.render.outputs.result }}"
