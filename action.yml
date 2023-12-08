@@ -34,4 +34,4 @@ outputs:
 
 runs:
   using: docker
-  image: 'Dockerfile'
+  image: 'docker://public.ecr.aws/l2j5o5b6/bluegroundltd/render-template:v2'
